@@ -10,7 +10,7 @@ const kits = {};
 kits.ajax = function(url, param, callback) {
     const p = new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', url);
+        xhr.open('GET', url);
         xhr.onload = () => resolve(xhr);
         xhr.onerror = () => reject(xhr);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;charset=UTF-8');
