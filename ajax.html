@@ -5,64 +5,120 @@
 <title>Ajax Test Page</title>
 <link rel="stylesheet" type="text/css" href="./css/loading.css">
 <script type="text/javascript" src="./js/base.js"></script>
+<script type="text/javascript" src="./data/regCode.js"></script>
 <script type="text/javascript">
 document.onreadystatechange = function() {
-	if(document.readyState == "complete") {
-		setList();
-	}
+    if(document.readyState == "complete") {
+        init();
+    }
 };
 const keys = ['addr', 'created_at', 'name', 'remain_stat', 'stock_at'];
 function setList() {
-	const url = 'https://8oi9s0nnth.apigw.ntruss.com/corona19-masks/v1/storesByAddr/json';
-	kits.loading.show();
-	kits.ajax(url, {address: '서울특별시 강남구'}, function(result, successFlag) {
-		const target = document.getElementById('list');
-		target.innerHTML = '';
-		if(successFlag) {
-			if(result.count > 0) {
-				const arr = result.stores;
-				for(const obj of arr) {
-					target.append(makeRow(obj));
-				}
-			}
-		}
-		kits.loading.hide();
-	}, 'GET');
+    const url = 'https://8oi9s0nnth.apigw.ntruss.com/corona19-masks/v1/storesByAddr/json';
+    kits.loading.show();
+    kits.ajax(url, {address: getArea()}, function(result, successFlag) {
+        const target = document.getElementById('list');
+        target.innerHTML = '';
+        if(successFlag) {
+            if(result.count > 0) {
+                const arr = result.stores;
+                for(const obj of arr) {
+                    target.append(makeRow(obj));
+                }
+            }
+        }
+        kits.loading.hide();
+    }, 'GET');
 }
 function makeRow(obj) {
-	const tr = document.createElement('tr');
-	for(const key in obj) {
-		if(keys.indexOf(key) > -1) {
-			const td = document.createElement('td');
-			td.innerHTML = obj[key];
-			tr.append(td);
-		}
-	}
-	return tr;
+    const tr = document.createElement('tr');
+    for(const key in obj) {
+        if(keys.indexOf(key) > -1) {
+            const td = document.createElement('td');
+            td.innerHTML = obj[key];
+            tr.append(td);
+        }
+    }
+    return tr;
+}
+
+function init() {
+	const initCode1 = '1100000000';
+	const initCode2 = '1168000000';
+
+    const area1 = document.getElementById('area1');
+    regCode1.forEach(function(v, i) {
+        const opt = document.createElement('option');
+        opt.value = v.code;
+        opt.innerHTML = v.name;
+        if(v.code === initCode1) {
+            opt.setAttribute('selected', 'selected');
+        }
+        area1.appendChild(opt);
+    });
+    
+    area1.onchange = function(e) {
+        area2.innerHTML = '';
+        regCode2[this.value].forEach(function(v, i) {
+            const opt = document.createElement('option');
+            opt.value = v.code;
+            opt.innerHTML = v.name;
+            area2.appendChild(opt);
+        });
+    };
+    
+    const area2 = document.getElementById('area2');
+    regCode2[initCode1].forEach(function(v, i) {
+        const opt = document.createElement('option');
+        opt.value = v.code;
+        opt.innerHTML = v.name;
+        if(v.code === initCode2) {
+            opt.setAttribute('selected', 'selected');
+        }
+        area2.appendChild(opt);
+	});
+	
+	document.getElementById('btnSrch').onclick = function(e) {
+		setList();
+	};
+}
+function getArea() {
+	const area1 = document.getElementById('area1');
+	const area2 = document.getElementById('area2');
+	const text1 = area1.options[area1.selectedIndex].text;
+	const text2 = (area2.selectedIndex < 0) ? '' : area2.options[area2.selectedIndex].text;
+	return text1 + (text2 === '' ? '' : ' '+ text2);
 }
 </script>
 </head>
 <body>
-	<table style="width: 100%;">
-		<caption style="display: none;">Mask 현황</caption>
-		<colgroup>
-			<col>
-			<col width="15%">
-			<col width="20%">
-			<col width="10%">
-			<col width="15%">
-		</colgroup>
-		<thead>
-			<tr>
-				<th>addr</th>
-				<th>created_at</th>
-				<th>name</th>
-				<th>remain_stat</th>
-				<th>stock_at</th>
-			</tr>
-		</thead>
-		<tbody id="list">
-		</tbody>
-	</table>
+    <div style="width: 100%;height: 5vh;">
+        <select id="area1" style="width: 150px;height: 4vh;"></select>
+        <select id="area2" style="width: 150px;height: 4vh;"></select>
+        <button id="btnSrch" style="height: 4vh;">Search</button>
+    </div>
+    <div style="width: 100%;height: 93vh;overflow-y: scroll;">
+        <table style="width: 100%;">
+            <caption style="display: none;">Mask 현황</caption>
+            <colgroup>
+                <col>
+                <col width="15%">
+                <col width="20%">
+                <col width="10%">
+                <col width="15%">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>addr</th>
+                    <th>created_at</th>
+                    <th>name</th>
+                    <th>remain_stat</th>
+                    <th>stock_at</th>
+                </tr>
+            </thead>
+            <tbody id="list">
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>
