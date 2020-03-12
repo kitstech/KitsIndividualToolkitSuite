@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Ajax Test Page</title>
+<link rel="stylesheet" type="text/css" href="./css/loading.css">
+<script type="text/javascript" src="./js/base.js"></script>
+<script type="text/javascript">
+document.onreadystatechange = function() {
+	if(document.readyState == "complete") {
+		setList();
+	}
+};
+function setList() {
+	const url = 'https://8oi9s0nnth.apigw.ntruss.com/corona19-masks/v1/storesByAddr/json';
+	const keys = ['addr', 'created_at', 'name', 'remain_stat', 'stock_at'];
+	kits.loading.show();
+	kits.ajax(url, {address: '서울특별시 강남구'}, function(result) {
+		const target = document.getElementById('list');
+		target.innerHTML = '';
+		if(result.count > 0) {
+			const arr = result.stores;
+			for(const obj of arr) {
+				const tr = document.createElement('tr');
+				for(const key in obj) {
+					if(keys.indexOf(key) > -1) {
+						const td = document.createElement('td');
+						td.innerHTML = obj[key];
+						tr.append(td);
+					}
+				}
+				target.append(tr);
+			}
+		}
+		kits.loading.hide();
+	}, 'GET');
+}
+</script>
+</head>
+<body>
+	<table style="width: 100%;">
+		<caption style="display: none;">Mask 현황</caption>
+		<colgroup>
+			<col>
+			<col width="15%">
+			<col width="20%">
+			<col width="10%">
+			<col width="15%">
+		</colgroup>
+		<thead>
+			<tr>
+				<th>addr</th>
+				<th>created_at</th>
+				<th>name</th>
+				<th>remain_stat</th>
+				<th>stock_at</th>
+			</tr>
+		</thead>
+		<tbody id="list">
+		</tbody>
+	</table>
+</body>
+</html>
