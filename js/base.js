@@ -26,15 +26,6 @@ kits.ajax = function(url, param, callback, method) {
     }).catch(function(httpRequest) {
         console.error(httpRequest.statusText, httpRequest);
     });
-
-    const parseJsonString = function(s) {
-        try {
-            const json = JSON.parse(s);
-            return (typeof json === 'object') ? json : null;
-        } catch(e) {
-            return null;
-        }
-    };
 };
 
 kits.loading = {
