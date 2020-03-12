@@ -18,12 +18,10 @@ kits.ajax = function(url, param, callback, method) {
         xhr.onerror = () => reject(xhr);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;charset=UTF-8');
         xhr.send((method === 'POST') ? param : null);
-        
     });
     p.then(function(httpRequest) {
-        const json = parseJsonString(httpRequest.responseText);
-        if(typeof callback === 'function' && json !== null) {
-            callback(json, httpRequest);
+        if(typeof callback === 'function' && that.isJsonString(httpRequest.responseText)) {
+            callback(JSON.parse(httpRequest.responseText), httpRequest);
         }
     }).catch(function(httpRequest) {
         console.error(httpRequest.statusText, httpRequest);
@@ -91,6 +89,15 @@ kits.loading = {
         return document.getElementById(this.vars.loadingLayerId) === null ? false : true;
     }
 };
+
+kits.isJsonString = function(s) {
+    try {
+        const json = JSON.parse(s);
+        return (typeof json === 'object');
+    } catch(e) {
+        return false;
+    }
+}
 
 kits.toQueryString = function(param) {
     if(typeof param === 'string') {
