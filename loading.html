@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Loading Test Page</title>
+<link rel="stylesheet" type="text/css" href="./css/loading.css">
+<script type="text/javascript" src="./js/base.js"></script>
+<script type="text/javascript">
+document.onreadystatechange = function() {
+	if(document.readyState == "complete") {
+		kits.loading.show('잠시만 기다려주십시오');
+	}
+};
+</script>
+</head>
+<body>
+	
+</body>
+</html>

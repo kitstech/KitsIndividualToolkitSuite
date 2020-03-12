@@ -41,3 +41,56 @@ kits.ajax = function(url, param, callback) {
         }
     };
 };
+
+kits.loading = {
+    vars: {
+        loadingLayerId: 'loading-layer',
+        loadingTextId: 'loading-text',
+        defaultText: 'Processing',
+        flagClassName: 'off'
+    },
+    init: function() {
+        if(!this.isExist()) {
+            const target = document.body;
+
+            const outer = document.createElement('div');
+            outer.id = this.vars.loadingLayerId;
+            outer.classList.add(this.vars.flagClassName);
+
+            const inner = document.createElement('div');
+            inner.classList.add('loading-container');
+
+            const div = document.createElement('div');
+            div.classList.add('loading');
+
+            const txt = document.createElement('div');
+            txt.id = this.vars.loadingTextId;
+
+            inner.append(div);
+            inner.append(txt);
+            
+            outer.append(inner);
+
+            target.prepend(outer);
+        }
+    },
+    show: function(text) {
+        if(!this.isExist()) {
+            this.init();
+        }
+        const el1 = document.getElementById(this.vars.loadingLayerId);
+        el1.classList.remove(this.vars.flagClassName);
+
+        const el2 = document.getElementById(this.vars.loadingTextId);
+        el2.innerHTML = (typeof text === 'undefined') ? this.vars.defaultText : text;
+    },
+    hide: function() {
+        if(this.isExist()) {
+            const el1 = document.getElementById(this.vars.loadingLayerId);
+            el1.classList.add(this.vars.flagClassName);
+        }
+    },
+    isExist: function() {
+        return document.getElementById(this.vars.loadingLayerId) === null ? false : true;
+    }
+};
