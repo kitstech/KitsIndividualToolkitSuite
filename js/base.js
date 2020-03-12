@@ -28,6 +28,26 @@ kits.ajax = function(url, param, callback, method) {
     });
 };
 
+kits.isJsonString = function(s) {
+    try {
+        const json = JSON.parse(s);
+        return (typeof json === 'object');
+    } catch(e) {
+        return false;
+    }
+};
+
+kits.toQueryString = function(param) {
+    if(typeof param === 'string') {
+        //key1=value1&key2=value2 ...
+    } else {
+        param = Object.keys(param).map(function(k) {
+            return encodeURIComponent(k) + '=' + encodeURIComponent(param[k]);
+        }).join('&');
+    }
+    return param;
+};
+
 kits.loading = {
     vars: {
         loadingLayerId: 'loading-layer',
@@ -80,23 +100,3 @@ kits.loading = {
         return document.getElementById(this.vars.loadingLayerId) === null ? false : true;
     }
 };
-
-kits.isJsonString = function(s) {
-    try {
-        const json = JSON.parse(s);
-        return (typeof json === 'object');
-    } catch(e) {
-        return false;
-    }
-}
-
-kits.toQueryString = function(param) {
-    if(typeof param === 'string') {
-        //key1=value1&key2=value2 ...
-    } else {
-        param = Object.keys(param).map(function(k) {
-            return encodeURIComponent(k) + '=' + encodeURIComponent(param[k]);
-        }).join('&');
-    }
-    return param;
-}
