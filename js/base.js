@@ -17,11 +17,7 @@ kits.ajax = function(url, param, callback, method) {
         xhr.onload = () => resolve(xhr);
         xhr.onerror = () => reject(xhr);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;charset=UTF-8');
-        if((method === 'POST')) {
-            xhr.send(param);
-        } else {
-            xhr.send();
-        }
+        xhr.send((method === 'POST') ? param : null);
         
     });
     p.then(function(httpRequest) {
