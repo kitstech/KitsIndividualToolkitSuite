@@ -11,29 +11,34 @@ document.onreadystatechange = function() {
 		setList();
 	}
 };
+const keys = ['addr', 'created_at', 'name', 'remain_stat', 'stock_at'];
 function setList() {
 	const url = 'https://8oi9s0nnth.apigw.ntruss.com/corona19-masks/v1/storesByAddr/json';
-	const keys = ['addr', 'created_at', 'name', 'remain_stat', 'stock_at'];
 	kits.loading.show();
-	kits.ajax(url, {address: '서울특별시 강남구'}, function(result) {
+	kits.ajax(url, {address: '서울특별시 강남구'}, function(result, successFlag) {
 		const target = document.getElementById('list');
 		target.innerHTML = '';
-		if(result.count > 0) {
-			const arr = result.stores;
-			for(const obj of arr) {
-				const tr = document.createElement('tr');
-				for(const key in obj) {
-					if(keys.indexOf(key) > -1) {
-						const td = document.createElement('td');
-						td.innerHTML = obj[key];
-						tr.append(td);
-					}
+		if(successFlag) {
+			if(result.count > 0) {
+				const arr = result.stores;
+				for(const obj of arr) {
+					target.append(makeRow(obj));
 				}
-				target.append(tr);
 			}
 		}
 		kits.loading.hide();
 	}, 'GET');
+}
+function makeRow(obj) {
+	const tr = document.createElement('tr');
+	for(const key in obj) {
+		if(keys.indexOf(key) > -1) {
+			const td = document.createElement('td');
+			td.innerHTML = obj[key];
+			tr.append(td);
+		}
+	}
+	return tr;
 }
 </script>
 </head>

@@ -21,10 +21,10 @@ kits.ajax = function(url, param, callback, method) {
     });
     p.then(function(httpRequest) {
         if(typeof callback === 'function' && that.isJsonString(httpRequest.responseText)) {
-            callback(JSON.parse(httpRequest.responseText), httpRequest);
+            callback(JSON.parse(httpRequest.responseText), true, httpRequest);
         }
     }).catch(function(httpRequest) {
-        console.error(httpRequest);
+        callback({}, false, httpRequest);
     });
 };
 
