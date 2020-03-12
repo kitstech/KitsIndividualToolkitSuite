@@ -7,21 +7,22 @@
  */
 const kits = {};
 
-kits.ajax = function(url, param, callback) {
+kits.ajax = function(url, param, callback, method) {
+    const that = this;
+    param = that.toQueryString(param);
+    method = method || 'POST';
     const p = new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', url);
+        xhr.open(method, url + ((method === 'POST') ? '' : ('?' + param)));
         xhr.onload = () => resolve(xhr);
         xhr.onerror = () => reject(xhr);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;charset=UTF-8');
-        if(typeof param === 'string') {
-            //key1=value1&key2=value2 ...
+        if((method === 'POST')) {
+            xhr.send(param);
         } else {
-            param = Object.keys(param).map(function(k) {
-                return encodeURIComponent(k) + '=' + encodeURIComponent(param[k]);
-            }).join('&');
+            xhr.send();
         }
-        xhr.send(param);
+        
     });
     p.then(function(httpRequest) {
         const json = parseJsonString(httpRequest.responseText);
@@ -94,3 +95,14 @@ kits.loading = {
         return document.getElementById(this.vars.loadingLayerId) === null ? false : true;
     }
 };
+
+kits.toQueryString = function(param) {
+    if(typeof param === 'string') {
+        //key1=value1&key2=value2 ...
+    } else {
+        param = Object.keys(param).map(function(k) {
+            return encodeURIComponent(k) + '=' + encodeURIComponent(param[k]);
+        }).join('&');
+    }
+    return param;
+}
