@@ -24,7 +24,7 @@ kits.ajax = function(url, param, callback, method) {
             callback(JSON.parse(httpRequest.responseText), httpRequest);
         }
     }).catch(function(httpRequest) {
-        console.error(httpRequest.statusText, httpRequest);
+        console.error(httpRequest);
     });
 };
 
