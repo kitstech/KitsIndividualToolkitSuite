@@ -100,3 +100,16 @@ kits.loading = {
         return document.getElementById(this.vars.loadingLayerId) === null ? false : true;
     }
 };
+
+kits.case = {
+    under2camel: function(str) {
+        return str.toLowerCase().replace(/(\_[a-z])/g, function(arg) {
+            return arg.toUpperCase().replace("_", "");
+        });
+    },
+    camel2under: function(str) {
+        return str.replace(/([A-Z])/g, function(arg) {
+            return "_" + arg.toLowerCase();
+        }).toUpperCase();
+    }
+};
